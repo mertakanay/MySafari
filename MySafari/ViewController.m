@@ -20,6 +20,7 @@
     [super viewDidLoad];
 
     self.webView.delegate = self;
+    self.urlTextField.delegate = self;
 }
 
 - (void) performLoadURLRequest:(NSString *)string
@@ -33,6 +34,8 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+
+    NSLog(@"text URL is %@", textField.text);
     [self performLoadURLRequest:textField.text];
     [textField resignFirstResponder];
     return YES;
