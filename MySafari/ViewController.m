@@ -11,6 +11,7 @@
 @interface ViewController () <UIWebViewDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UITextField *urlTextField;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -21,6 +22,7 @@
 
     self.webView.delegate = self;
     self.urlTextField.delegate = self;
+    self.activityIndicator.hidesWhenStopped = YES;
 }
 
 - (void) performLoadURLRequest:(NSString *)string
@@ -39,6 +41,21 @@
     [self performLoadURLRequest:textField.text];
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark UIWebViewDelegate Protocols
+
+
+
+-(void)webViewDidStartLoad:(UIWebView *)webView
+{
+     [self.activityIndicator startAnimating];
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [self.activityIndicator stopAnimating];
+    self.activityIndicator.hidesWhenStopped=YES;
 }
 
 @end
