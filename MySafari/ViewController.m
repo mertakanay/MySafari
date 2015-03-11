@@ -24,8 +24,8 @@
 
 - (void) performLoadURLRequest:(NSString *)string
 {
-    NSURL *url = [[NSURL alloc] initWithString:string];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+    NSURL *url = [NSURL URLWithString:string];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }
 
@@ -34,6 +34,7 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self performLoadURLRequest:textField.text];
+    [textField resignFirstResponder];
     return YES;
 }
 
