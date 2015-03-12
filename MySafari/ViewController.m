@@ -13,6 +13,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *urlTextField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
+
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+
+@property (weak, nonatomic) IBOutlet UIButton *forwardButton;
+
 @end
 
 @implementation ViewController
@@ -23,6 +28,12 @@
     self.webView.delegate = self;
     self.urlTextField.delegate = self;
     self.activityIndicator.hidesWhenStopped = YES;
+
+
+    self.backButton.enabled = NO;
+    self.forwardButton.enabled = NO;
+
+
 }
 
 - (void) performLoadURLRequest:(NSString *)string
@@ -31,6 +42,25 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }
+
+- (IBAction)onBackButtonPressed:(id)sender {
+
+    [self.webView goBack];
+}
+
+- (IBAction)onPreviousButtonPressed:(id)sender {
+    [self.webView goForward];
+    }
+
+- (IBAction)onStopButtonPressed:(id)sender {
+    [self.webView stopLoading];
+}
+
+- (IBAction)onReloadButtonPressed:(id)sender {
+    [self.webView reload];
+}
+
+
 
 #pragma mark UITextFieldDelegate Protocols
 
@@ -50,12 +80,38 @@
 -(void)webViewDidStartLoad:(UIWebView *)webView
 {
      [self.activityIndicator startAnimating];
+
+
+
 }
+
+
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [self.activityIndicator stopAnimating];
     self.activityIndicator.hidesWhenStopped=YES;
+
+
+    if(self.webView.canGoBack == YES)
+    {
+        self.backButton.enabled = YES;
+    }
+    else
+    {
+        self.backButton.enabled = NO;
+    }
+
+    if(self.webView.canGoForward == YES)
+    {
+        self.forwardButton.enabled = YES;
+    }
+    else
+    {
+        self.forwardButton.enabled = NO;
+    }
+
+
 }
 
 @end
