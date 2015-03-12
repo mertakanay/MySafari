@@ -33,6 +33,8 @@
     self.backButton.enabled = NO;
     self.forwardButton.enabled = NO;
 
+    self.webView.scrollView.scrollEnabled = TRUE;
+    self.urlTextField.clearButtonMode = YES;
 
 }
 
@@ -61,14 +63,29 @@
 }
 
 
+- (IBAction)onPlusButtonPressed:(id)sender {
+    UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Coming Soon" message:nil delegate: self cancelButtonTitle:@"Ok" otherButtonTitles: nil, nil];
+
+    [alertview show];
+}
+
 
 #pragma mark UITextFieldDelegate Protocols
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 
+    NSString *urlString;
     NSLog(@"text URL is %@", textField.text);
-    [self performLoadURLRequest:textField.text];
+
+    NSString *head = [textField.text substringToIndex:6];
+
+    if(![head isEqualToString:@"http://"]){
+
+        urlString = [NSString stringWithFormat:@"http://%@",textField.text];
+    }
+
+    [self performLoadURLRequest:urlString];
     [textField resignFirstResponder];
     return YES;
 }
@@ -80,9 +97,6 @@
 -(void)webViewDidStartLoad:(UIWebView *)webView
 {
      [self.activityIndicator startAnimating];
-
-
-
 }
 
 
@@ -93,7 +107,7 @@
     self.activityIndicator.hidesWhenStopped=YES;
 
 
-    if(self.webView.canGoBack == YES)
+    if(webView.canGoBack == YES)
     {
         self.backButton.enabled = YES;
     }
@@ -102,7 +116,7 @@
         self.backButton.enabled = NO;
     }
 
-    if(self.webView.canGoForward == YES)
+    if(webView.canGoForward == YES)
     {
         self.forwardButton.enabled = YES;
     }
@@ -112,6 +126,17 @@
     }
 
 
+    NSLog(@" webview scroll enable? .....%i",webView.scrollView.scrollEnabled);
+
+    if(webView.scrollView.dragging == YES)
+    {
+        NSLog(@"start dragging/scrolling in webview");
+    }
+
+
+    self.urlTextField.text = webView.request.URL.absoluteString;
+
+    self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 
 @end
