@@ -36,11 +36,13 @@
     self.backButton.enabled = NO;
     self.forwardButton.enabled = NO;
 
-    //self.webView.scrollView.scrollEnabled = TRUE;
+
+    //allow user to clear textfield
     self.urlTextField.clearButtonMode = YES;
 
 }
 
+//load URL service method
 - (void) performLoadURLRequest:(NSString *)string
 {
     NSURL *url = [NSURL URLWithString:string];
@@ -79,6 +81,7 @@
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    //make textfield apprear or disappear: if webview drag up: textfield disappear
     if(self.contentY >= scrollView.contentOffset.y)
     {
         self.urlTextField.alpha = 0.0;
@@ -90,6 +93,7 @@
 
 #pragma mark UITextFieldDelegate Protocols
 
+//add http:// string if user does not provide
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 
@@ -122,38 +126,16 @@
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [self.activityIndicator stopAnimating];
+
     self.activityIndicator.hidesWhenStopped=YES;
 
+    self.backButton.enabled = webView.canGoBack;
+    self.forwardButton.enabled = webView.canGoForward;
 
-    if(webView.canGoBack == YES)
-    {
-        self.backButton.enabled = YES;
-    }
-    else
-    {
-        self.backButton.enabled = NO;
-    }
-
-    if(webView.canGoForward == YES)
-    {
-        self.forwardButton.enabled = YES;
-    }
-    else
-    {
-        self.forwardButton.enabled = NO;
-    }
-
-
-    NSLog(@" webview scroll enable? .....%i",webView.scrollView.scrollEnabled);
-
-    if(webView.scrollView.dragging == YES)
-    {
-        NSLog(@"start dragging/scrolling in webview");
-    }
-
-
+    //display current URL in textfield
     self.urlTextField.text = webView.request.URL.absoluteString;
 
+    //display webpage title in navigation bar's title
     self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 
