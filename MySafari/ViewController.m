@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-@interface ViewController () <UIWebViewDelegate, UITextFieldDelegate>
+@interface ViewController () <UIWebViewDelegate, UITextFieldDelegate,UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UITextField *urlTextField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -17,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 
 @property (weak, nonatomic) IBOutlet UIButton *forwardButton;
+
+@property (nonatomic) CGFloat contentY;
 
 @end
 
@@ -27,13 +29,14 @@
 
     self.webView.delegate = self;
     self.urlTextField.delegate = self;
+    self.webView.scrollView.delegate = self;
     self.activityIndicator.hidesWhenStopped = YES;
 
 
     self.backButton.enabled = NO;
     self.forwardButton.enabled = NO;
 
-    self.webView.scrollView.scrollEnabled = TRUE;
+    //self.webView.scrollView.scrollEnabled = TRUE;
     self.urlTextField.clearButtonMode = YES;
 
 }
@@ -69,6 +72,21 @@
     [alertview show];
 }
 
+
+#pragma mark UIScrollViewDelegate protocols
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    self.contentY = scrollView.contentOffset.y;
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if(self.contentY >= scrollView.contentOffset.y)
+    {
+        self.urlTextField.alpha = 0.0;
+    }
+    else{
+        self.urlTextField.alpha = 1.0;
+    }
+}
 
 #pragma mark UITextFieldDelegate Protocols
 
